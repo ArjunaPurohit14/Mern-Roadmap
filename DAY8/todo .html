@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TODO with Circular Text Animation</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 2rem;
+    background: #f0f8ff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  input, button {
+    padding: 10px;
+    font-size: 1rem;
+    margin: 5px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 30px;
+  }
+
+  li {
+    padding: 10px;
+    background: #fff;
+    margin: 5px auto;
+    width: 250px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+
+  /* Container for flying chars */
+  #charContainer {
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 200px;
+    pointer-events: none;
+  }
+
+  /* Each character span */
+  #charContainer span {
+    position: absolute;
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #ff4081;
+    user-select: none;
+  }
+
+</style>
+</head>
+<body>
+
+<h1>✨ TODO-LIST with Circular Animation ✨</h1>
+
+<input type="text" id="todoInput" placeholder="Enter a task" />
+<button id="addBtn">Add</button>
+
+<div id="charContainer"></div>
+
+<ul id="todoList">
+  <li>Task 1</li>
+  <li>Task 2</li>
+</ul>
+
+<script>
+  const input = document.getElementById("todoInput");
+  const button = document.getElementById("addBtn");
+  const charContainer = document.getElementById("charContainer");
+  const todoList = document.getElementById("todoList");
+
+  // Animate characters in a circle
+  function animateChars(text) {
+    charContainer.innerHTML = ''; // Clear old characters
+
+    const chars = text.split('');
+    const radius = 80; // radius of the circle animation
+    const centerX = 100; // center of container (half width)
+    const centerY = 100; // center of container (half height)
+    const total = chars.length;
+
+    // Create spans for each character
+    chars.forEach((char, i) => {
+      const span = document.createElement('span');
+      span.textContent = char;
+      charContainer.appendChild(span);
+
+      // Initial position: center of container
+      span.style.left = centerX + 'px';
+      span.style.top = centerY + 'px';
+    });
+
+    // Animate characters around the circle
+    let angle = 0;
+    const animationDuration = 2000; // ms
+    const fps = 60;
+    const totalFrames = (animationDuration / 1000) * fps;
+    let frame = 0;
+
+    function animate() {
+      frame++;
+      chars.forEach((_, i) => {
+        const span = charContainer.children[i];
+        // Calculate angle for each char around the circle
+        const charAngle = (2 * Math.PI / total) * i + (2 * Math.PI * frame / totalFrames);
+        const x = centerX + radius * Math.cos(charAngle);
+        const y = centerY + radius * Math.sin(charAngle);
+
+        span.style.left = x + 'px';
+        span.style.top = y + 'px';
+      });
+
+      if (frame < totalFrames) {
+        requestAnimationFrame(animate);
+      } else {
+        // Animation done: clear characters and add to list
+        charContainer.innerHTML = '';
+        const li = document.createElement('li');
+        li.textContent = text;
+        todoList.appendChild(li);
+
+        input.disabled = false;
+        button.disabled = false;
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    animate();
+  }
+
+  function addTodo() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.disabled = true;
+    button.disabled = true;
+
+    animateChars(text);
+  }
+
+  button.addEventListener('click', addTodo);
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      addTodo();
+    }
+  });
+</script>
+
+</body>
+</html>

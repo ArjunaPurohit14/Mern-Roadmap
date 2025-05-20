@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JavaScript Quiz: Closures & this</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; }
+    .question { margin-bottom: 1.5rem; }
+    button { padding: 10px 20px; margin-top: 10px; cursor: pointer; }
+    .correct { color: green; }
+    .incorrect { color: red; }
+  </style>
+</head>
+<body>
+
+  <h1>JS Quiz: Closures & <code>this</code></h1>
+  <div id="quiz"></div>
+  <p id="score"></p>
+
+  <script>
+    const quiz = [
+      {
+        question: "1. What is a closure in JavaScript?",
+        options: [
+          "A function having access to its outer function's variables",
+          "A function that returns another function only",
+          "A block-level scope in JavaScript",
+          "A variable that is globally accessible"
+        ],
+        answer: 0,
+        explanation: "Closures let a function access variables from its outer (enclosing) function scope, even after the outer function has finished."
+      },
+      {
+        question: "2. What does the `this` keyword refer to in a regular function (non-arrow) in the global scope?",
+        options: [
+          "The parent function",
+          "The window/global object",
+          "The object that called the function",
+          "undefined"
+        ],
+        answer: 1,
+        explanation: "In non-strict mode, `this` in the global scope refers to the global object (like `window` in browsers)."
+      },
+      {
+        question: "3. What does the `this` keyword refer to in an arrow function?",
+        options: [
+          "The object that calls the arrow function",
+          "The window object always",
+          "It is dynamically scoped",
+          "It uses `this` from the surrounding lexical scope"
+        ],
+        answer: 3,
+        explanation: "Arrow functions don’t have their own `this`; they use `this` from the surrounding scope (lexical scoping)."
+      },
+      {
+        question: "4. What will this code log?\n\n```js\nfunction outer() {\n  let count = 0;\n  return function inner() {\n    count++;\n    console.log(count);\n  };\n}\nconst fn = outer();\nfn();\nfn();\n```",
+        options: [
+          "1 and 1",
+          "1 and 2",
+          "0 and 1",
+          "undefined and undefined"
+        ],
+        answer: 1,
+        explanation: "`fn()` keeps access to `count` through a closure. Each call increases the same `count`, logging 1 and then 2."
+      },
+      {
+        question: "5. What does this log?\n\n```js\nconst person = {\n  name: 'Arjun',\n  greet() {\n    return () => console.log(this.name);\n  }\n};\nconst greetFn = person.greet();\ngreetFn();\n```",
+        options: [
+          "undefined",
+          "Error",
+          "Arjun",
+          "Nothing"
+        ],
+        answer: 2,
+        explanation: "`greet()` returns an arrow function. Arrow functions capture `this` from their surrounding context, which is `person`, so it logs 'Arjun'."
+      }
+    ];
+
+    const quizContainer = document.getElementById("quiz");
+    let score = 0;
+    let current = 0;
+
+    function loadQuestion() {
+      if (current >= quiz.length) {
+        document.getElementById("score").textContent = `Quiz Finished! Your score: ${score}/${quiz.length}`;
+        return;
+      }
+
+      const q = quiz[current];
+      quizContainer.innerHTML = `
+        <div class="question">
+          <p>${q.question.replace(/\n/g, '<br>').replace(/```js|```/g, '')}</p>
+          ${q.options.map((opt, i) => `<button onclick="checkAnswer(${i})">${opt}</button>`).join('<br>')}
+        </div>
+      `;
+    }    
+
+    function checkAnswer(selected) {
+      const q = quiz[current];
+      const result = document.createElement("p");
+
+      if (selected ===   q.answer) {
+        result.textContent = "Correct! ✅ " + q.explanation;
+        result.className = "correct";
+        score++;
+      } else {
+        result.textContent = "Incorrect ❌. " + q.explanation;
+        result.className = "incorrect";
+      }
+
+      quizContainer.appendChild(result);
+      current++;
+      setTimeout(loadQuestion, 2000);
+    }
+
+    loadQuestion();
+  </script>
+
+</body>
+</html>

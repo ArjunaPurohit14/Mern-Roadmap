@@ -1,0 +1,23 @@
+.container {
+    display: flex;
+}
+
+.left-column, .right-column {
+    flex: 1;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+    background-color: #f9f9f9;
+}
+
+.left-column {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.right-column {
+    background-color: #e74c3c;
+    color: #fff;
+}
+

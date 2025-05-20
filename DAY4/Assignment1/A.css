@@ -1,0 +1,19 @@
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  
+  .item1 {
+    background: #f99;
+    grid-column: span 2;
+  }
+  
+  .item2 {
+    background: #9f9;
+    grid-row: span 2;
+  }
+  
+  .item3 {
+    background: #99f;
+  }

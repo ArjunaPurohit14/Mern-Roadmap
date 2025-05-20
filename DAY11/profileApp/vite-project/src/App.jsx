@@ -5,7 +5,7 @@ import './App.css'
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" on >
       <h1>Profile Cards</h1>
       <ProfileCard
         name="Arjun Purohit"
